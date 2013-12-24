@@ -6,13 +6,17 @@
 		<script>
 			// document.write("Hello World!");
 			function change_img (ele_id) {
-				document.getElementById("msg").innerHTML = "Element " + ele_id + " clicked.";
 				
 				
+				var current_img = $(ele_id).attr("src");
 				
 				
-				
+				document.getElementById("msg").innerHTML = "Element " + ele_id + " clicked. ~ " + current_img;
 				// document.write("<p>I am the " + ele_id + " element.</p>");
+				
+				if (current_img == "empty.png") {
+					$(ele_id).attr("src","circle.png");
+				}
 			}
 		</script>
 	</head>
@@ -25,19 +29,19 @@
 		============================================== -->
 		<table border="1">
 			<tr>
-				<td><img src="empty.png" id="1_1" onclick="change_img(this)"></td>
-				<td id="1_2" onclick="change_img(this)"><img src="empty.png"></td>
-				<td id="1_3"><img src="empty.png"></td>
+				<td id="1_1"><img src="empty.png" onclick="change_img(this)"></td>
+				<td id="1_2"><img src="empty.png" onclick="change_img(this)"></td>
+				<td id="1_3"><img src="empty.png" onclick="change_img(this)"></td>
 			</tr>
 			<tr>
-				<td id="2_1"><img src="empty.png"></td>
-				<td id="2_2"><img src="empty.png"></td>
-				<td id="2_3"><img src="empty.png"></td>
+				<td id="2_1"><img src="empty.png" onclick="change_img(this)"></td>
+				<td id="2_2"><img src="empty.png" onclick="change_img(this)"></td>
+				<td id="2_3"><img src="empty.png" onclick="change_img(this)"></td>
 			</tr>
 			<tr>
-				<td id="3_1"><img src="empty.png"></td>
-				<td id="3_2"><img src="empty.png"></td>
-				<td id="3_3"><img src="empty.png"></td>
+				<td id="3_1"><img src="empty.png" onclick="change_img(this)"></td>
+				<td id="3_2"><img src="empty.png" onclick="change_img(this)"></td>
+				<td id="3_3"><img src="empty.png" onclick="change_img(this)"></td>
 			</tr>
 		</table>
 	</body>
