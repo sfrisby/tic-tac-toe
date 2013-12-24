@@ -2,20 +2,31 @@
 <html>
 	<head>
 		<title>Tic-Tac-Toe</title>
+		<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
 		<script>
-			document.write("Hello World!");
+			// document.write("Hello World!");
+			function change_img (ele_id) {
+				document.getElementById("msg").innerHTML = "Element " + ele_id + " clicked.";
+				
+				
+				
+				
+				
+				// document.write("<p>I am the " + ele_id + " element.</p>");
+			}
 		</script>
 	</head>
 	
 	<body>
+		<p id="msg"></p>
 		<!-- The Game Board
 		The board individual data elements are organized 
 		related to their position in a 3x3 matrix 
 		============================================== -->
 		<table border="1">
 			<tr>
-				<td id="1_1"><img src="empty.png"></td>
-				<td id="1_2"><img src="empty.png"></td>
+				<td><img src="empty.png" id="1_1" onclick="change_img(this)"></td>
+				<td id="1_2" onclick="change_img(this)"><img src="empty.png"></td>
 				<td id="1_3"><img src="empty.png"></td>
 			</tr>
 			<tr>
