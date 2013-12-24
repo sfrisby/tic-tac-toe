@@ -4,6 +4,7 @@
 		<title>Tic-Tac-Toe</title>
 		<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
 		<script>
+			var img_check = 1;
 			// document.write("Hello World!");
 			function change_img (ele_id) {
 				
@@ -15,7 +16,11 @@
 				// document.write("<p>I am the " + ele_id + " element.</p>");
 				
 				if (current_img == "empty.png") {
-					$(ele_id).attr("src","circle.png");
+					if (img_check % 2 == 0)
+						$(ele_id).attr("src","circle.png");
+					else
+						$(ele_id).attr("src","cross.png");
+					img_check++;
 				}
 			}
 		</script>
