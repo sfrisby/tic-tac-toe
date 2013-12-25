@@ -2,11 +2,13 @@
 <html>
 	<head>
 		<title>Tic-Tac-Toe</title>
-		<script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+		<script src="jquery.js"></script>
 		<script>
 			// globals
 			var debug_lvl = 0;
 			var img_check = 1;
+			var circle_wins = 0;
+			var cross_wins = 0;
 			
 			// This function changes the images for tic-tac-toe
 			function change_img (ele_id) {
@@ -37,6 +39,8 @@
 				    ($("#1_1").attr("src") == "circle.png" && $("#2_2").attr("src") == "circle.png" && $("#3_3").attr("src") == "circle.png") ||
 				    ($("#3_1").attr("src") == "circle.png" && $("#2_2").attr("src") == "circle.png" && $("#1_3").attr("src") == "circle.png"))
 				{
+					circle_wins++;
+					document.getElementById("msg").innerHTML = "Circle has won " + circle_wins + " and Cross has won " + cross_wins + " games.";
 					alert("Circle is the Winner!");
 					reset();
 				}
@@ -50,6 +54,8 @@
 				    ($("#1_1").attr("src") == "cross.png" && $("#2_2").attr("src") == "cross.png" && $("#3_3").attr("src") == "cross.png") ||
 				    ($("#3_1").attr("src") == "cross.png" && $("#2_2").attr("src") == "cross.png" && $("#1_3").attr("src") == "cross.png"))
 				{
+					cross_wins++;
+					document.getElementById("msg").innerHTML = "Circle has won " + circle_wins + " and Cross has won " + cross_wins + " games.";
 					alert("Cross is the Winner!");
 					reset();
 				}
@@ -72,13 +78,13 @@
 	</head>
 	
 	<body>
-		<p id="msg"></p>
 		<!-- The Game Board
 		The board individual data elements are organized 
 		related to their position in a 3x3 matrix.
 		this keyword is used to point to the image objects
 		============================================== -->
-		<table border="1">
+		<table border="1" style="margin-left: auto; margin-right: auto;">
+			<th id="msg" colspan="3">Circle has won 0 and Cross has won 0 games</th>
 			<tr>
 				<td><img id="1_1" src="empty.png" onclick="change_img(this)"></td>
 				<td><img id="1_2" src="empty.png" onclick="change_img(this)"></td>
@@ -93,6 +99,9 @@
 				<td><img id="3_1" src="empty.png" onclick="change_img(this)"></td>
 				<td><img id="3_2" src="empty.png" onclick="change_img(this)"></td>
 				<td><img id="3_3" src="empty.png" onclick="change_img(this)"></td>
+			</tr>
+			<tr>
+				<td colspan="3"><button onclick="reset()">Reset Game</button></td>
 			</tr>
 		</table>
 	</body>
