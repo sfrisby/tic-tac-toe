@@ -60,6 +60,19 @@
 					reset();
 				}
 				// checking if it was a tie
+				if (($("#1_1").attr("src") == "cross.png" || ($("#1_1").attr("src") == "circle.png")) &&
+					($("#1_2").attr("src") == "cross.png" || ($("#1_2").attr("src") == "circle.png")) &&
+					($("#1_3").attr("src") == "cross.png" || ($("#1_3").attr("src") == "circle.png")) &&
+					($("#2_1").attr("src") == "cross.png" || ($("#2_1").attr("src") == "circle.png")) &&
+					($("#2_2").attr("src") == "cross.png" || ($("#2_2").attr("src") == "circle.png")) &&
+					($("#2_3").attr("src") == "cross.png" || ($("#2_3").attr("src") == "circle.png")) &&
+					($("#3_1").attr("src") == "cross.png" || ($("#3_1").attr("src") == "circle.png")) &&
+					($("#3_2").attr("src") == "cross.png" || ($("#3_2").attr("src") == "circle.png")) &&
+					($("#3_3").attr("src") == "cross.png" || ($("#3_3").attr("src") == "circle.png"))) 
+				{
+					alert("The game ended in a draw.");
+					reset();
+				}
 			}
 			
 			// This function reset the board images to all be empty.png
