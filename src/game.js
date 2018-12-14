@@ -2,7 +2,6 @@
 * game.js - Spencer Frisby
 *
 * This script contains game logic for tic-tac-toe.
-*
 **/
 
 var switcher = 1;
@@ -27,74 +26,39 @@ var combos = [["#1_1", "#1_2", "#1_3"],
               ["#1_1","#2_2","#3_3"],
               ["#1_3","#2_2","#3_1"]];
 
-// This function changes the images for tic-tac-toe
-function change_img (ele_id) {
-   // stores image src that was clicked on
-   var current_img = $(ele_id).attr("src");
-   
-   if (debug_lvl > 0)
-      document.getElementById("msg").innerHTML = "Element " + ele_id + " clicked. ~ " + current_img;
-   
+/** This function changes the images for tic-tac-toe. */
+function change_square (square) {
+   // Stores image src that was clicked on.
+   var current_img = $(square).attr("src");
    // Alternating between cross or circle depending on switcher.
    if (current_img == blank_img) {
       if (switcher % 2 == 0)
-	 $(ele_id).attr("src",circle_img);
+	 $(square).attr("src",circle_img);
       else
-	 $(ele_id).attr("src",cross_img);
+	 $(square).attr("src",cross_img);
       switcher++;
    }
-   $(document).ready(function(){check_winner();});
+   // Now check if a win or draw has occurred.
+   // THIS EXECUTES BEFORE SEEING THE SQUARE IMAGE CHANGE!!!
+   check_winner();
+
+   if (debug_lvl > 0) {
+      var msg = "Element " + square + " clicked. ~ " + current_img;
+      document.getElementById("msg").innerHTML = msg;
+   }
 }
 
+/** Show the number of wins. */
 function update_th (msg)
 {
    document.getElementById("msg").innerHTML = msg;
 }
 
-function check_td (player, first, second, third) {
-   if (player == "circle") {
-      if ($(first).attr("src") == circle_img &&
-          $(second).attr("src") == circle_img &&
-          $(third).attr("src") == circle_img)
-         return true
-      else
-         return false
-   }
-   else
-   {
-      if ($(first).attr("src") == cross_img &&
-          $(second).attr("src") == cross_img &&
-          $(third).attr("src") == cross_img)
-         return true
-      else
-         return false
-   }
-}
-
-function check_draw ()
-{
-   var blank_found = false;
-   for (i=0; i<combos.length; i++)
-   {
-      for (j=0; j<combos[i].length; j++)
-      {
-         if ($(combos[i][j]).attr("src") == cross_img ||
-             ($(combos[i][j]).attr("src") == circle_img))
-            continue;
-         else {
-            blank_found = true;
-            return blank_found;
-         }
-      }
-   }
-   return blank_found;
-}
-
-// This function checks to see if anyone has won
+/** This function checks all combinations to see if anyone has won. */
 function check_winner () {
    for (i=0; i<combos.length; i++) {
-      // Checking if circle is the winner
-      if (check_td("circle", combos[i][0], combos[i][1], combos[i][2])) {
+      // Checking if circle is the winner.
+      if (circle_won(combos[i])) {
          circle_wins++;
          update_th("Circle has won " + circle_wins + " and Cross has won " + cross_wins + " games.");
          alert("Circle is the Winner!");
@@ -102,7 +66,7 @@ function check_winner () {
          return;
       }
       // Checking if cross is the winner.
-      if (check_td("cross", combos[i][0], combos[i][1], combos[i][2])) {
+      if (cross_won(combos[i])) {
          cross_wins++;
          update_th("Circle has won " + circle_wins + " and Cross has won " + cross_wins + " games.");
          alert("Cross is the Winner!");
@@ -114,6 +78,42 @@ function check_winner () {
    if (!check_draw()) {
       alert("The game ended in a draw.");
       reset();
+   }
+
+   /** Helper functions for check_winner. */
+   /** Returns true if circle won or false. */
+   function circle_won (combo) {
+      if ($(combo[0]).attr("src") == circle_img &&
+          $(combo[1]).attr("src") == circle_img &&
+          $(combo[2]).attr("src") == circle_img)
+         return true;
+      return false;
+   }
+   /** Returns true if circle won or false. */
+   function cross_won (combo) {
+      if ($(combo[0]).attr("src") == cross_img &&
+          $(combo[1]).attr("src") == cross_img &&
+          $(combo[2]).attr("src") == cross_img)
+         return true;
+      return false;
+   }
+   function check_draw ()
+   {
+      var blank_found = false;
+      for (i=0; i<combos.length; i++)
+      {
+         for (j=0; j<combos[i].length; j++)
+         {
+            if ($(combos[i][j]).attr("src") == cross_img ||
+                ($(combos[i][j]).attr("src") == circle_img))
+               continue;
+            else {
+               blank_found = true;
+               return blank_found;
+            }
+         }
+      }
+      return blank_found;
    }
 }
 
@@ -128,4 +128,19 @@ function reset() {
          $(cell_id).attr("src",blank_img);
       }
    }
+}
+
+function get_some() {
+   var values = ['']
+   var test = $('#gameboard td').toArray(); // grabbing all elements
+   //         `- identical to $('#gameboard td').get();
+   var tes1 = $('#gameboard td').get(8); // grab the td at index 8
+   var tes2 = $('#gameboard td:lt(9)').get(); // grab the first 8 td
+   var tes3 = $('#gameboard td:lt(9)').children('img'); // returning first 8 img
+   var tes4 = $('#gameboard td').children('img').attr('id'); // returning first id
+
+   return 0;
+   //.filter(function() {
+   //var testing = $.inArray($(this).data('src'), values) != blank_img;
+   // });
 }
