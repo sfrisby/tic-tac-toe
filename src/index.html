@@ -1,121 +1,32 @@
-<!DOCTYPE >
+<!DOCTYPE html>
 <html>
-	<head>
-		<title>Tic-Tac-Toe</title>
-		<script src="jquery.js"></script>
-		<script>
-			// globals
-			var debug_lvl = 0;
-			var img_check = 1;
-			var circle_wins = 0;
-			var cross_wins = 0;
-			
-			// This function changes the images for tic-tac-toe
-			function change_img (ele_id) {
-				// stores image src that was clicked on
-				var current_img = $(ele_id).attr("src");
-				if (debug_lvl > 0)
-					document.getElementById("msg").innerHTML = "Element " + ele_id + " clicked. ~ " + current_img;
-				// changes the empty.png to be either cross or circle depending on img_check
-				if (current_img == "empty.png") {
-					if (img_check % 2 == 0)
-						$(ele_id).attr("src","circle.png");
-					else
-						$(ele_id).attr("src","cross.png");
-					img_check++;
-				}
-				check_winner();
-			}
-			
-			// This function checks to see if anyone has won
-			function check_winner () {
-				// checking if circle is the winner
-				if (($("#1_1").attr("src") == "circle.png" && $("#1_2").attr("src") == "circle.png" && $("#1_3").attr("src") == "circle.png") ||
-				    ($("#2_1").attr("src") == "circle.png" && $("#2_2").attr("src") == "circle.png" && $("#2_3").attr("src") == "circle.png") ||
-				    ($("#2_1").attr("src") == "circle.png" && $("#2_2").attr("src") == "circle.png" && $("#2_3").attr("src") == "circle.png") ||
-				    ($("#1_1").attr("src") == "circle.png" && $("#2_1").attr("src") == "circle.png" && $("#3_1").attr("src") == "circle.png") ||
-				    ($("#1_2").attr("src") == "circle.png" && $("#2_2").attr("src") == "circle.png" && $("#3_2").attr("src") == "circle.png") ||
-				    ($("#1_3").attr("src") == "circle.png" && $("#2_3").attr("src") == "circle.png" && $("#3_3").attr("src") == "circle.png") ||
-				    ($("#1_1").attr("src") == "circle.png" && $("#2_2").attr("src") == "circle.png" && $("#3_3").attr("src") == "circle.png") ||
-				    ($("#3_1").attr("src") == "circle.png" && $("#2_2").attr("src") == "circle.png" && $("#1_3").attr("src") == "circle.png"))
-				{
-					circle_wins++;
-					document.getElementById("msg").innerHTML = "Circle has won " + circle_wins + " and Cross has won " + cross_wins + " games.";
-					alert("Circle is the Winner!");
-					reset();
-				}
-				// checking if cross is the winner
-				if (($("#1_1").attr("src") == "cross.png" && $("#1_2").attr("src") == "cross.png" && $("#1_3").attr("src") == "cross.png") ||
-				    ($("#2_1").attr("src") == "cross.png" && $("#2_2").attr("src") == "cross.png" && $("#2_3").attr("src") == "cross.png") ||
-				    ($("#2_1").attr("src") == "cross.png" && $("#2_2").attr("src") == "cross.png" && $("#2_3").attr("src") == "cross.png") ||
-				    ($("#1_1").attr("src") == "cross.png" && $("#2_1").attr("src") == "cross.png" && $("#3_1").attr("src") == "cross.png") ||
-				    ($("#1_2").attr("src") == "cross.png" && $("#2_2").attr("src") == "cross.png" && $("#3_2").attr("src") == "cross.png") ||
-				    ($("#1_3").attr("src") == "cross.png" && $("#2_3").attr("src") == "cross.png" && $("#3_3").attr("src") == "cross.png") ||
-				    ($("#1_1").attr("src") == "cross.png" && $("#2_2").attr("src") == "cross.png" && $("#3_3").attr("src") == "cross.png") ||
-				    ($("#3_1").attr("src") == "cross.png" && $("#2_2").attr("src") == "cross.png" && $("#1_3").attr("src") == "cross.png"))
-				{
-					cross_wins++;
-					document.getElementById("msg").innerHTML = "Circle has won " + circle_wins + " and Cross has won " + cross_wins + " games.";
-					alert("Cross is the Winner!");
-					reset();
-				}
-				// checking if it was a tie
-				if (($("#1_1").attr("src") == "cross.png" || ($("#1_1").attr("src") == "circle.png")) &&
-					($("#1_2").attr("src") == "cross.png" || ($("#1_2").attr("src") == "circle.png")) &&
-					($("#1_3").attr("src") == "cross.png" || ($("#1_3").attr("src") == "circle.png")) &&
-					($("#2_1").attr("src") == "cross.png" || ($("#2_1").attr("src") == "circle.png")) &&
-					($("#2_2").attr("src") == "cross.png" || ($("#2_2").attr("src") == "circle.png")) &&
-					($("#2_3").attr("src") == "cross.png" || ($("#2_3").attr("src") == "circle.png")) &&
-					($("#3_1").attr("src") == "cross.png" || ($("#3_1").attr("src") == "circle.png")) &&
-					($("#3_2").attr("src") == "cross.png" || ($("#3_2").attr("src") == "circle.png")) &&
-					($("#3_3").attr("src") == "cross.png" || ($("#3_3").attr("src") == "circle.png"))) 
-				{
-					alert("The game ended in a draw.");
-					reset();
-				}
-			}
-			
-			// This function reset the board images to all be empty.png
-			function reset() {
-				$("#1_1").attr("src","empty.png");
-				$("#1_2").attr("src","empty.png");
-				$("#1_3").attr("src","empty.png");
-				$("#2_1").attr("src","empty.png");
-				$("#2_2").attr("src","empty.png");
-				$("#2_3").attr("src","empty.png");
-				$("#3_1").attr("src","empty.png");
-				$("#3_2").attr("src","empty.png");
-				$("#3_3").attr("src","empty.png");
-			}
-		</script>
-	</head>
-	
-	<body>
-		<!-- The Game Board
-		The board individual data elements are organized 
-		related to their position in a 3x3 matrix.
-		this keyword is used to point to the image objects
-		============================================== -->
-		<table border="1" style="margin-left: auto; margin-right: auto;">
-			<th id="msg" colspan="3">Circle has won 0 and Cross has won 0 games</th>
-			<tr>
-				<td><img id="1_1" src="empty.png" onclick="change_img(this)"></td>
-				<td><img id="1_2" src="empty.png" onclick="change_img(this)"></td>
-				<td><img id="1_3" src="empty.png" onclick="change_img(this)"></td>
-			</tr>
-			<tr>
-				<td><img id="2_1" src="empty.png" onclick="change_img(this)"></td>
-				<td><img id="2_2" src="empty.png" onclick="change_img(this)"></td>
-				<td><img id="2_3" src="empty.png" onclick="change_img(this)"></td>
-			</tr>
-			<tr>
-				<td><img id="3_1" src="empty.png" onclick="change_img(this)"></td>
-				<td><img id="3_2" src="empty.png" onclick="change_img(this)"></td>
-				<td><img id="3_3" src="empty.png" onclick="change_img(this)"></td>
-			</tr>
-			<tr>
-				<td colspan="3"><button onclick="reset()">Reset Game</button></td>
-			</tr>
-		</table>
-	</body>
+   <head>
+      <title>Tic-Tac-Toe</title>
+   </head>
+   <body style="background-color:gray;">
+      <!-- The game board is a matrix of row x column which is the ID. -->
+      <table border="1" style="margin-left: auto; margin-right: auto;">
+	 <th id="msg" colspan="3">Circle has won 0 and Cross has won 0 games</th>
+	 <tr>
+	    <td><img id="1_1" src="../img/empty.png" onclick="change_img(this)"></td>
+	    <td><img id="1_2" src="../img/empty.png" onclick="change_img(this)"></td>
+	    <td><img id="1_3" src="../img/empty.png" onclick="change_img(this)"></td>
+	 </tr>
+	 <tr>
+	    <td><img id="2_1" src="../img/empty.png" onclick="change_img(this)"></td>
+	    <td><img id="2_2" src="../img/empty.png" onclick="change_img(this)"></td>
+	    <td><img id="2_3" src="../img/empty.png" onclick="change_img(this)"></td>
+	 </tr>
+	 <tr>
+	    <td><img id="3_1" src="../img/empty.png" onclick="change_img(this)"></td>
+	    <td><img id="3_2" src="../img/empty.png" onclick="change_img(this)"></td>
+	    <td><img id="3_3" src="../img/empty.png" onclick="change_img(this)"></td>
+	 </tr>
+	 <tr>
+	    <td colspan="3"><button onclick="reset()">Reset Game</button></td>
+	 </tr>
+      </table>
+      <script src="jquery.js" type="text/javascript"></script>
+      <script src="game.js" type="text/javascript"></script>
+   </body>
 </html>
