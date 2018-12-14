@@ -1,8 +1,13 @@
-//$(document).ready(function(){
+/**
+* game.js - Spencer Frisby
+*
+* This script contains game logic for tic-tac-toe.
+*
+**/
 
-// globals
-var debug_lvl = 0;
 var switcher = 1;
+
+var debug_lvl = 0;
 var circle_wins = 0;
 var cross_wins = 0;
 
@@ -66,38 +71,47 @@ function check_td (player, first, second, third) {
    }
 }
 
+function check_draw ()
+{
+   var blank_found = false;
+   for (i=0; i<combos.length; i++)
+   {
+      for (j=0; j<combos[i].length; j++)
+      {
+         if ($(combos[i][j]).attr("src") == cross_img ||
+             ($(combos[i][j]).attr("src") == circle_img))
+            continue;
+         else {
+            blank_found = true;
+            return blank_found;
+         }
+      }
+   }
+   return blank_found;
+}
+
 // This function checks to see if anyone has won
 function check_winner () {
-
-   
-   // checking if circle is the winner
    for (i=0; i<combos.length; i++) {
-      // alert(combos[i]);
+      // Checking if circle is the winner
       if (check_td("circle", combos[i][0], combos[i][1], combos[i][2])) {
          circle_wins++;
          update_th("Circle has won " + circle_wins + " and Cross has won " + cross_wins + " games.");
          alert("Circle is the Winner!");
          reset();
+         return;
+      }
+      // Checking if cross is the winner.
+      if (check_td("cross", combos[i][0], combos[i][1], combos[i][2])) {
+         cross_wins++;
+         update_th("Circle has won " + circle_wins + " and Cross has won " + cross_wins + " games.");
+         alert("Cross is the Winner!");
+         reset();
+         return;
       }
    }
-   // checking if cross is the winner
-   for (i=0; i<combos.length; i++) {
-      // cross_wins++;
-      // document.getElementById("msg").innerHTML = "Circle has won " + circle_wins + " and Cross has won " + cross_wins + " games.";
-      // alert("Cross is the Winner!");
-      // reset();
-   }
-   // checking if it was a tie
-   if (($("#1_1").attr("src") == cross_img || ($("#1_1").attr("src") == circle_img)) &&
-       ($("#1_2").attr("src") == cross_img || ($("#1_2").attr("src") == circle_img)) &&
-       ($("#1_3").attr("src") == cross_img || ($("#1_3").attr("src") == circle_img)) &&
-       ($("#2_1").attr("src") == cross_img || ($("#2_1").attr("src") == circle_img)) &&
-       ($("#2_2").attr("src") == cross_img || ($("#2_2").attr("src") == circle_img)) &&
-       ($("#2_3").attr("src") == cross_img || ($("#2_3").attr("src") == circle_img)) &&
-       ($("#3_1").attr("src") == cross_img || ($("#3_1").attr("src") == circle_img)) &&
-       ($("#3_2").attr("src") == cross_img || ($("#3_2").attr("src") == circle_img)) &&
-       ($("#3_3").attr("src") == cross_img || ($("#3_3").attr("src") == circle_img))) 
-   {
+   // Checking if the match was a draw.
+   if (!check_draw()) {
       alert("The game ended in a draw.");
       reset();
    }
@@ -115,5 +129,3 @@ function reset() {
       }
    }
 }
-
-//});
