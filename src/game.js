@@ -112,16 +112,22 @@ function check_winner () {
    }
    /** If no one won and no squares are blank, a draw has occurred." */
    function draw_occurred () {
-      for (i=0; i<combos.length; i++) {
-         for (j=0; j<combos[i].length; j++) {
-            if ($(combos[i][j]).attr("src") == crs_img ||
-                ($(combos[i][j]).attr("src") == cir_img))
-               continue;
-            else
-               return false;
-         }
+      var sources = get_sources();
+      for (i=0; i<sources.length; i++) {
+         if (sources[i] == crs_img || sources[i] == cir_img)
+            continue;
+         else
+            return false;
       }
       return true;
+   }
+   /** Return the source values of the image elements. */
+   function get_sources () {
+      var sources = [];
+      var squares = $('#gameboard td:lt(9)').children('img'); // The first 8 image elements.
+      for (i=0; i<squares.length; i++)
+         sources[i] = $(squares[i]).attr("src");
+      return sources;
    }
 }
 
@@ -136,23 +142,4 @@ function reset() {
          $(cell_id).attr("src",blank_img);
       }
    }
-}
-
-/** Goal is to produce array 0 to 8 of all image sources*/
-function get_some() {
-   var values = ['']
-   var test = $('#gameboard td').toArray(); // grabbing all elements
-   //         `- identical to $('#gameboard td').get();
-   var tes1 = $('#gameboard td').get(8); // grab the td at index 8
-   var tes2 = $('#gameboard td:lt(9)').get(); // grab the first 8 td
-   var tes3 = $('#gameboard td:lt(9)').children('img'); // returning first 8 img
-   var tes4 = [];
-   for (i=0; i<tes3.length; i++)
-      tes4[i] = $(tes3[i]).attr("src");
-
-
-   return 0;
-   //.filter(function() {
-   //var testing = $.inArray($(this).data('src'), values) != blank_img;
-   // });
 }
