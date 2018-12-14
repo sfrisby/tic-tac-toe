@@ -138,6 +138,7 @@ function reset() {
    }
 }
 
+/** Goal is to produce array 0 to 8 of all image sources*/
 function get_some() {
    var values = ['']
    var test = $('#gameboard td').toArray(); // grabbing all elements
@@ -145,7 +146,10 @@ function get_some() {
    var tes1 = $('#gameboard td').get(8); // grab the td at index 8
    var tes2 = $('#gameboard td:lt(9)').get(); // grab the first 8 td
    var tes3 = $('#gameboard td:lt(9)').children('img'); // returning first 8 img
-   var tes4 = $('#gameboard td').children('img').attr('id'); // returning first id
+   var tes4 = [];
+   for (i=0; i<tes3.length; i++)
+      tes4[i] = $(tes3[i]).attr("src");
+
 
    return 0;
    //.filter(function() {
