@@ -56,24 +56,30 @@ function update_th (msg)
 
 /** This function checks all combinations to see if anyone has won. */
 function check_winner () {
+   var win_found = false;
+   var amsg = "";
+   var msg = "";
    for (i=0; i<combos.length; i++) {
-      // Checking if circle is the winner.
       if (circle_won(combos[i])) {
+         win_found = true;
          circle_wins++;
-         update_th("Circle has won " + circle_wins + " and Cross has won " + cross_wins + " games.");
-         alert("Circle is the Winner!");
-         reset();
-         return;
+         amsg = "Circle is the Winner!";
+         msg = "Circle has won " + circle_wins + " and Cross has won " + cross_wins + " games.";
+         break;
       }
-      // Checking if cross is the winner.
       if (cross_won(combos[i])) {
+         win_found = true;
          cross_wins++;
-         update_th("Circle has won " + circle_wins + " and Cross has won " + cross_wins + " games.");
-         alert("Cross is the Winner!");
-         reset();
-         return;
+         amsg = "Cross is the Winner!";
+         msg = "Circle has won " + circle_wins + " and Cross has won " + cross_wins + " games.";
+         break;
       }
    }
+   if (win_found) {
+      winner_alert(amsg,msg);
+      return;
+   }
+
    // Checking if the match was a draw.
    if (!check_draw()) {
       alert("The game ended in a draw.");
@@ -82,6 +88,11 @@ function check_winner () {
 
    /** Helper functions for check_winner. */
    /** Returns true if circle won or false. */
+   function winner_alert (amsg, msg) {
+      alert(amsg);
+      update_th(msg);
+      reset();
+   }
    function circle_won (combo) {
       if ($(combo[0]).attr("src") == circle_img &&
           $(combo[1]).attr("src") == circle_img &&
@@ -97,13 +108,10 @@ function check_winner () {
          return true;
       return false;
    }
-   function check_draw ()
-   {
+   function check_draw () {
       var blank_found = false;
-      for (i=0; i<combos.length; i++)
-      {
-         for (j=0; j<combos[i].length; j++)
-         {
+      for (i=0; i<combos.length; i++) {
+         for (j=0; j<combos[i].length; j++) {
             if ($(combos[i][j]).attr("src") == cross_img ||
                 ($(combos[i][j]).attr("src") == circle_img))
                continue;
