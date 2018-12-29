@@ -8,6 +8,7 @@ var debug = 0;
 
 var record_id = "record";
 var match_id = "match-results";
+var new_match_msg = "Waiting to see what happens ...";
 
 var switcher = 1;
 var match_complete = 0;
@@ -40,7 +41,6 @@ var combos = [["#1_1", "#1_2", "#1_3"],
 */
 function change_square (square) {
    if (match_complete) {
-      match_complete = 0;
       reset();
    }
    else {
@@ -122,29 +122,21 @@ function check_winner () {
          return true;
       return false;
    }
-   /** If no one won and no squares are blank, a draw has occurred." */
+   /** All squres must be filled for a draw to occur. */
    function draw_occurred () {
-      var sources = get_sources();
-      for (i=0; i<sources.length; i++) {
-         if (sources[i] == crs_img || sources[i] == cir_img)
-            continue;
-         else
-            return false;
-      }
-      return true;
-   }
-   /** Return the source values of the image elements. */
-   function get_sources () {
       var sources = [];
       var squares = $('#gameboard td:lt(9)').children('img'); // The first 8 image elements.
       for (i=0; i<squares.length; i++)
-         sources[i] = $(squares[i]).attr("src");
-      return sources;
+         if ($(squares[i]).attr("src") == blank_img)
+            return false;
+      return true;
    }
 }
 
 // Reset the game board images to all be blank.
 function reset() {
+   match_complete = 0;
+   update_info(match_id, new_match_msg);
    var rows = 3;
    var cols = 3;
    var cell_id = "";

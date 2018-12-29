@@ -18,6 +18,10 @@ table#gameboard {
         -ms-user-select: none; /* Internet Explorer/Edge */
             user-select: none; /* Non-prefixed version */
 }
+table#gameboard th p {
+    margin: 0px;
+    padding: 0px;
+}
 table#gameboard td {
     /**margin: 0px 2px 0px 2px;*/
     margin: 0px 4px 0px 0px;
