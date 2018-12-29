@@ -7,7 +7,7 @@
    <body>
       <!-- The game board is a matrix of row by column, which is the ID for the td. -->
       <table id="gameboard">
-	 <th id="msg" colspan="3">Circle has won 0 and Cross has won 0 games</th>
+	 <th id="record" colspan="3">Circle has won 0 and Cross has won 0 games</th>
 	 <tr>
 	    <td><img id="1_1" src="../img/empty.png" onclick="change_square(this)"></td>
 	    <td><img id="1_2" src="../img/empty.png" onclick="change_square(this)"></td>
@@ -25,6 +25,7 @@
 	 </tr>
 	 <tr>
 	    <td><button onclick="reset()">Reset Game</button></td>
+            <td><p id="match-results"></p></td>
 	 </tr>
       </table>
       <script src="jquery.js" type="text/javascript"></script>

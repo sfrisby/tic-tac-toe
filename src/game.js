@@ -4,9 +4,14 @@
 * This script contains game logic for tic-tac-toe.
 **/
 
-var switcher = 1;
+var debug = 0;
 
-var debug_lvl = 0;
+var record_id = "record";
+var match_id = "match-results";
+
+var switcher = 1;
+var match_complete = 0;
+
 var cir_wins = 0;
 var crs_wins = 0;
 
@@ -26,73 +31,80 @@ var combos = [["#1_1", "#1_2", "#1_3"],
               ["#1_1","#2_2","#3_3"],
               ["#1_3","#2_2","#3_1"]];
 
-/** This function changes the images for tic-tac-toe. */
+/** 
+ change_square changes a blank image into a cross or circle depending on the
+ switcher value. It simply alternates between cross and circle.
+ 
+ If a match has completed, and another sqaure is chosen, the game board will be
+ reset.
+*/
 function change_square (square) {
-   // Stores image src that was clicked on.
-   var current_img = $(square).attr("src");
-   // Alternating between cross or circle depending on switcher.
-   if (current_img == blank_img) {
-      if (switcher % 2 == 0)
-	 $(square).attr("src",cir_img);
-      else
-	 $(square).attr("src",crs_img);
-      switcher++;
+   if (match_complete) {
+      match_complete = 0;
+      reset();
    }
-   // Now check if a win or draw has occurred.
-   // THIS EXECUTES BEFORE SEEING THE SQUARE IMAGE CHANGE!!!
-   check_winner();
-   if (debug_lvl > 0) {
-      var msg = "Element " + square + " clicked. ~ " + current_img;
-      document.getElementById("msg").innerHTML = msg;
+   else {
+      // Stores image src that was clicked on.
+      var current_img = $(square).attr("src");
+      // Alternating between cross or circle depending on switcher.
+      if (current_img == blank_img) {
+         if (switcher % 2 == 0)
+	    $(square).attr("src",cir_img);
+         else
+	    $(square).attr("src",crs_img);
+         switcher++;
+      }
+      // Now check if a win or draw has occurred.
+      check_winner();
    }
 }
 
-/** Show the number of wins. */
-function update_th (msg) {
-   document.getElementById("msg").innerHTML = msg;
-}
+/** 
+ This function checks all combinations to see if anyone has won. 
 
-/** This function checks all combinations to see if anyone has won. */
+ A draw occurs if no winner is found.
+*/
 function check_winner () {
    var win_found = false;
-   var amsg = "";
-   var msg = "";
+   var match_results = "";
+   var match_record = "";
 
-   // Check if a draw occurred, otherwise check if someone won.
-   if (draw_occurred()) {
-      alert("The game ended in a draw.");
-      reset();
-      return;
-   }
    for (i=0; i<combos.length; i++) {
       if (cir_won(combos[i])) {
          win_found = true;
          cir_wins++;
-         amsg = "Circle is the Winner!";
-         msg = "Circle has won " + cir_wins + " and Cross has won " + crs_wins + " games.";
+         match_results = "Circle was the winner!";
+         match_record = "Circle has won " + cir_wins + " and Cross has won " + crs_wins + " games.";
          break;
       }
       if (crs_won(combos[i])) {
          win_found = true;
          crs_wins++;
-         amsg = "Cross is the Winner!";
-         msg = "Circle has won " + cir_wins + " and Cross has won " + crs_wins + " games.";
+         match_results = "Cross was the winner!";
+         match_record = "Circle has won " + cir_wins + " and Cross has won " + crs_wins + " games.";
          break;
       }
    }
    if (win_found) {
-      winner_alert(amsg,msg);
-      reset();
+      winner_alert(match_results, match_record);
+      match_complete = 1;
       return;
+   }
+   else {
+      if (draw_occurred()) {
+         update_info(match_id,"The game ended in a draw.");
+         match_complete = 1;
+         return;
+      }
    }
 
    /******************* 
    * Helper functions *
    *******************/
    /** Alert the winner status of the match. */
-   function winner_alert (amsg, msg) {
-      alert(amsg);
-      update_th(msg);
+   function winner_alert (match_results, match_record) {
+      update_info(record_id,match_record);
+      update_info(match_id,match_results);
    }
    /** Returns true if circle won or false. */
    function cir_won (combo) {
@@ -135,11 +147,16 @@ function check_winner () {
 function reset() {
    var rows = 3;
    var cols = 3;
-   var cell_id = "#1_1";
+   var cell_id = "";
    for (i=1; i<=rows; i++) {
       for (j=1; j<=cols; j++) {
          cell_id = "#"+i+"_"+j;
          $(cell_id).attr("src",blank_img);
       }
    }
+}
+
+/* Given any 'id', update the html to display the message 'msg' */
+function update_info (id, msg) {
+   document.getElementById(id).innerHTML = msg;
 }
