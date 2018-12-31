@@ -14,17 +14,19 @@ function get_player_win_serie() {
    var count = 0;
    var empty_square = null;
    for (i=0; i<series.length; i++) {
-      for (j=0; j<series[i].length; j++) {
-         if ($(series[i][j]).attr("src") == crs_img) // TODO: crs_img is taken as 'player' piece, need variable.
-            count++;
-         if ($(series[i][j]).attr("src") == blank_img)
-            empty_square = series[i][j];
-      }
-      if (count == 2)
-         return empty_square;
-      else {
-         count = 0;
-         empty_sqaure = null;
+      if (!all_squares_used_in_series(series[i])) {
+         for (j=0; j<series[i].length; j++) {
+            if ($(series[i][j]).attr("src") == crs_img) // TODO: crs_img is taken as 'player' piece, need variable.
+               count++;
+            if ($(series[i][j]).attr("src") == blank_img)
+               empty_square = series[i][j];
+         }
+         if (count == 2)
+            return empty_square;
+         else {
+            count = 0;
+            empty_sqaure = null;
+         }
       }
    }
    return empty_sqaure;
@@ -34,17 +36,19 @@ function get_computer_win_serie() {
    var count = 0;
    var empty_square = null;
    for (var i=0; i<series.length; i++) {
-      for (var j=0; j<series[i].length; j++) {
-         if ($(series[i][j]).attr("src") == cir_img) // TODO: more relatabel variable for computer piece.
-            count++;
-         if ($(series[i][j]).attr("src") == blank_img)
-            empty_square = series[i][j];
-      }
-      if (count == 2)
-         return empty_square;
-      else {
-         count = 0;
-         empty_sqaure = null;
+      if (!all_squares_used_in_series(series[i])) {
+         for (var j=0; j<series[i].length; j++) {
+            if ($(series[i][j]).attr("src") == cir_img) // TODO: more relatabel variable for computer piece.
+               count++;
+            if ($(series[i][j]).attr("src") == blank_img)
+               empty_square = series[i][j];
+         }
+         if (count == 2)
+            return empty_square;
+         else {
+            count = 0;
+            empty_sqaure = null;
+         }
       }
    }
    return empty_sqaure;
