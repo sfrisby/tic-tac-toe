@@ -1,7 +1,9 @@
-/**
-* game.js - Spencer Frisby
+/** 
+* game.js
+* 
+* Spencer Frisby
 *
-* This script contains game logic for tic-tac-toe.
+* This script contains game operations for tic-tac-toe.
 **/
 
 var debug = 0;
@@ -21,7 +23,7 @@ var cir_img = "../img/circle.png";
 var crs_img = "../img/cross.png";
 
               // rows
-var combos = [["#1_1", "#1_2", "#1_3"],
+var series = [["#1_1", "#1_2", "#1_3"],
               ["#2_1", "#2_2", "#2_3"],
               ["#3_1", "#3_2", "#3_3"],
               // columns
@@ -48,15 +50,24 @@ function change_square (square) {
       var current_img = $(square).attr("src");
       // Alternating between cross or circle depending on switcher.
       if (current_img == blank_img) {
-         if (switcher % 2 == 0)
-	    $(square).attr("src",cir_img);
-         else
-	    $(square).attr("src",crs_img);
-         switcher++;
+         //if (switcher % 2 == 0)
+         //$(square).attr("src",cir_img);
+         //else
+	 $(square).attr("src",crs_img);
+         //switcher++;
+
+
+         // Now the computer makes a choice.
+         computers_choice();
       }
+
       // Now check if a win or draw has occurred.
       check_winner();
    }
+}
+
+function computers_choice() {
+   $(computer_choice()).attr("src",cir_img);
 }
 
 /** 
@@ -69,15 +80,15 @@ function check_winner () {
    var match_results = "";
    var match_record = "";
 
-   for (i=0; i<combos.length; i++) {
-      if (cir_won(combos[i])) {
+   for (i=0; i<series.length; i++) {
+      if (cir_won(series[i])) {
          win_found = true;
          cir_wins++;
          match_results = "Circle was the winner!";
          match_record = "Circle has won " + cir_wins + " and Cross has won " + crs_wins + " games.";
          break;
       }
-      if (crs_won(combos[i])) {
+      if (crs_won(series[i])) {
          win_found = true;
          crs_wins++;
          match_results = "Cross was the winner!";
