@@ -80,11 +80,9 @@ function all_squares_used_in_series(series) {
 
 /* Serially looking for empty square. */
 function get_empty_square() {
-   for (var i=0; i<series.length; i++) {
-      for (var j=0; j<series[i].length; j++) {
-         if ($(series[i][j]).attr("src") == blank_img)
-            return series[i][j];
-      }
+   for (var i=0; i<ele_ids.length; i++) {
+      if ($(ele_ids[i]).attr("src") == blank_img)
+         return ele_ids[i];
    }
 }
 

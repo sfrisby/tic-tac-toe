@@ -22,6 +22,13 @@ var blank_img = "../img/empty.png";
 var cir_img = "../img/circle.png";
 var crs_img = "../img/cross.png";
 
+
+// Set of all the element IDs.
+var ele_ids = ["#1_1", "#1_2", "#1_3",
+               "#2_1", "#2_2", "#2_3",
+               "#3_1", "#3_2", "#3_3"];
+
+// Series of combinations for wins.
               // rows
 var series = [["#1_1", "#1_2", "#1_3"],
               ["#2_1", "#2_2", "#2_3"],
@@ -67,7 +74,6 @@ function match_turn()
    // repeat
 }
 
-
 function computers_choice() {
    $(computer_choice()).attr("src",cir_img);
 }
@@ -84,6 +90,7 @@ function check_winner () {
 
    for (i=0; i<series.length; i++) {
       if (cir_won(series[i])) {
+         winner_display(series[i]);
          win_found = true;
          cir_wins++;
          match_results = "Circle was the winner!";
@@ -91,6 +98,7 @@ function check_winner () {
          break;
       }
       if (crs_won(series[i])) {
+         winner_display(series[i]);
          win_found = true;
          crs_wins++;
          match_results = "Cross was the winner!";
@@ -144,20 +152,20 @@ function check_winner () {
             return false;
       return true;
    }
+   /** Make it visually apparent who won. */
+   function winner_display(serie) {
+      for (var i=0; i<serie.length; i++)
+         $(serie[i]).attr("style","border:3px dashed green;");
+   }
 }
 
 // Reset the game board images to all be blank.
 function reset() {
    match_complete = 0;
    update_info(match_id, new_match_msg);
-   var rows = 3;
-   var cols = 3;
-   var cell_id = "";
-   for (i=1; i<=rows; i++) {
-      for (j=1; j<=cols; j++) {
-         cell_id = "#"+i+"_"+j;
-         $(cell_id).attr("src",blank_img);
-      }
+   for (i=0; i<ele_ids.length; i++) {
+      $(ele_ids[i]).attr("src",blank_img);
+      $(ele_ids[i]).attr("style","border:0px;");
    }
 }
 
