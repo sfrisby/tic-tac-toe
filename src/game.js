@@ -46,25 +46,27 @@ function change_square (square) {
       reset();
    }
    else {
-      // Stores image src that was clicked on.
-      var current_img = $(square).attr("src");
       // Alternating between cross or circle depending on switcher.
-      if (current_img == blank_img) {
-         //if (switcher % 2 == 0)
-         //$(square).attr("src",cir_img);
-         //else
-	 $(square).attr("src",crs_img);
-         //switcher++;
-
-
+      if ($(square).attr("src") == blank_img) {
+	 $(square).attr("src",crs_img); // TODO: change to player piece variable.
+         if (check_winner()) return;
+         
          // Now the computer makes a choice.
          computers_choice();
+         if (check_winner()) return;
       }
-
-      // Now check if a win or draw has occurred.
-      check_winner();
    }
 }
+
+function match_turn()
+{
+   // player plays
+   // check for winner
+   // computer goes next
+   // check for player
+   // repeat
+}
+
 
 function computers_choice() {
    $(computer_choice()).attr("src",cir_img);
@@ -99,7 +101,7 @@ function check_winner () {
    if (win_found) {
       winner_alert(match_results, match_record);
       match_complete = 1;
-      return;
+      return true;
    }
    else {
       if (draw_occurred()) {
