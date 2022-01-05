@@ -1,175 +1,186 @@
-/** 
-* game.js
-* 
-* Spencer Frisby
-*
-* This script contains game operations for tic-tac-toe.
-**/
+var p1turn = true; // false for player 2 turn.
 
-var debug = 0;
+var concluded = 0;
 
-var record_id = "record";
-var match_id = "match-results";
-var new_match_msg = "Waiting to see what happens ...";
+let available_squares = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+let p1_squares = [];
+let p2_squares = [];
 
-var switcher = 1;
-var match_complete = 0;
+var count = {
+   'draws': 0,
+   'p1wins': 0,
+   'p2wins': 0
+};
 
-var cir_wins = 0;
-var crs_wins = 0;
+var winning_combos = [
+   [2, 7, 6], [9, 5, 1], [4, 3, 8],
+   [2, 9, 4], [7, 5, 3], [6, 1, 8],
+   [2, 5, 8], [4, 5, 6]
+];
 
-var blank_img = "../img/empty.png";
-var cir_img = "../img/circle.png";
-var crs_img = "../img/cross.png";
+function square_chosen(square) {
 
+   if (concluded)
+      return;
 
-// Set of all the element IDs.
-var ele_ids = ["#1_1", "#1_2", "#1_3",
-               "#2_1", "#2_2", "#2_3",
-               "#3_1", "#3_2", "#3_3"];
+   var chosen = parseInt($(square).attr("id"));
 
-// Series of combinations for wins.
-              // rows
-var series = [["#1_1", "#1_2", "#1_3"],
-              ["#2_1", "#2_2", "#2_3"],
-              ["#3_1", "#3_2", "#3_3"],
-              // columns
-              ["#1_1","#2_1","#3_1"],
-              ["#1_2","#2_2","#3_2"],
-              ["#1_3","#2_3","#3_3"],
-              // diagonals
-              ["#1_1","#2_2","#3_3"],
-              ["#1_3","#2_2","#3_1"]];
-
-/** 
- change_square changes a blank image into a cross or circle depending on the
- switcher value. It simply alternates between cross and circle.
- 
- If a match has completed, and another sqaure is chosen, the game board will be
- reset.
-*/
-function change_square (square) {
-   if (match_complete) {
-      reset();
-   }
-   else {
-      // Alternating between cross or circle depending on switcher.
-      if ($(square).attr("src") == blank_img) {
-	 $(square).attr("src",crs_img); // TODO: change to player piece variable.
-         if (check_winner()) return;
-         
-         // Now the computer makes a choice.
-         computers_choice();
-         if (check_winner()) return;
+   // Assign chosen square to players squares.
+   // Remove the chosen square from available squares.
+   if (available_squares.includes(chosen)) {
+      $('#choice').text("")
+      if (p1turn) {
+         p1_squares.push(chosen)
+         $(square).attr("src", p1_img);
+      } else {
+         p2_squares.push(chosen)
+         $(square).attr("src", p2_img);
       }
+      available_squares.splice(available_squares.indexOf(chosen), 1);
+      update_turn();
+   } else {
+      $('#choice').text("You can't go there! Select an empty space.")
+      return;
    }
+
+   // Check for a winner.
+   if (isWinner())
+      return;
+
+   // Check for a draw.
+   if (isDraw()) {
+      confirmedDraw();
+      return;
+   }
+
+   // Computers turn (only IFF checked).
+   if ($('input[type=radio][name=opponent][value=computer]').is(':checked')) {
+      let search = get_computer_square(); // NOTE: splice happening in method call ~ available_squares.splice(available_squares.indexOf(search), 1);
+      if (p1turn) {
+         p1_squares.push(search)
+         $("#" + search).attr("src", p1_img);
+      } else {
+         p2_squares.push(search)
+         $("#" + search).attr("src", p2_img);
+      }
+      update_turn();
+   }
+
+   // Check for a winner.
+   if (isWinner())
+      return;
+
+   // Check for a draw.
+   if (isDraw()) {
+      confirmedDraw();
+      return;
+   }
+
 }
 
-function match_turn()
-{
-   // player plays
-   // check for winner
-   // computer goes next
-   // check for player
-   // repeat
+function update_turn() {
+   p1turn = !p1turn;
 }
 
-function computers_choice() {
-   $(computer_choice()).attr("src",cir_img);
+function isDraw() {
+   return (available_squares.length == 0)
 }
 
-/** 
- This function checks all combinations to see if anyone has won. 
+function confirmedDraw() {
+   concluded = 1;
+   count.draws++;
+   $('#draws').text(count.draws)
+   $('#choice').text("The game has ended in a draw.");
+   $('#playAgainBTN').removeAttr('hidden');
+}
 
- A draw occurs if no winner is found.
-*/
-function check_winner () {
-   var win_found = false;
-   var match_results = "";
-   var match_record = "";
-
-   for (i=0; i<series.length; i++) {
-      if (cir_won(series[i])) {
-         winner_display(series[i]);
-         win_found = true;
-         cir_wins++;
-         match_results = "Circle was the winner!";
-         match_record = "Circle has won " + cir_wins + " and Cross has won " + crs_wins + " games.";
-         break;
-      }
-      if (crs_won(series[i])) {
-         winner_display(series[i]);
-         win_found = true;
-         crs_wins++;
-         match_results = "Cross was the winner!";
-         match_record = "Circle has won " + cir_wins + " and Cross has won " + crs_wins + " games.";
-         break;
-      }
-   }
-   if (win_found) {
-      winner_alert(match_results, match_record);
-      match_complete = 1;
+function isWinner() {
+   let winner = get_winning_combo(p1_squares);
+   if (winner >= 0) {
+      concluded = 1;
+      count.p1wins++;
+      $('#p1wins').text(count.p1wins)
+      $('#choice').text($('#player-one-name').val() + " won the match!")
+      winner_display(winning_combos[winner]);
+      $('#playAgainBTN').removeAttr('hidden');
       return true;
    }
-   else {
-      if (draw_occurred()) {
-         update_info(match_id,"The game ended in a draw.");
-         match_complete = 1;
-         return;
-      }
-   }
-
-   /******************* 
-   * Helper functions *
-   *******************/
-   /** Alert the winner status of the match. */
-   function winner_alert (match_results, match_record) {
-      update_info(record_id,match_record);
-      update_info(match_id,match_results);
-   }
-   /** Returns true if circle won or false. */
-   function cir_won (combo) {
-      if ($(combo[0]).attr("src") == cir_img &&
-          $(combo[1]).attr("src") == cir_img &&
-          $(combo[2]).attr("src") == cir_img)
-         return true;
-      return false;
-   }
-   /** Returns true if circle won or false. */
-   function crs_won (combo) {
-      if ($(combo[0]).attr("src") == crs_img &&
-          $(combo[1]).attr("src") == crs_img &&
-          $(combo[2]).attr("src") == crs_img)
-         return true;
-      return false;
-   }
-   /** All squres must be filled for a draw to occur. */
-   function draw_occurred () {
-      var sources = [];
-      var squares = $('#gameboard td:lt(9)').children('img'); // The first 8 image elements.
-      for (i=0; i<squares.length; i++)
-         if ($(squares[i]).attr("src") == blank_img)
-            return false;
+   winner = get_winning_combo(p2_squares);
+   if (winner >= 0) {
+      concluded = 1;
+      count.p2wins++;
+      $('#p2wins').text(count.p2wins)
+      $('#choice').text($('#player-two-name').val() + " won the match!")
+      winner_display(winning_combos[winner]);
+      $('#playAgainBTN').removeAttr('hidden');
       return true;
    }
-   /** Make it visually apparent who won. */
-   function winner_display(serie) {
-      for (var i=0; i<serie.length; i++)
-         $(serie[i]).attr("style","border:3px dashed green;");
-   }
+   return false;
 }
 
-// Reset the game board images to all be blank.
+/**
+ * Obtain the winning combination index.
+ * @param {*} chosen Array of chosen squares.
+ * @returns winning combination index or -1 winning combination wasn't found.
+ */
+function get_winning_combo(chosen) {
+   if (chosen.length < 3) // Must have chosen at least 3 squares to win.
+      return -1;
+   for (i = 0; i < winning_combos.length; i++) {
+      if (chosen.includes(winning_combos[i][0]) && chosen.includes(winning_combos[i][1]) && chosen.includes(winning_combos[i][2]))
+         return i;
+   }
+   return -1;
+}
+
+/** Changing background color of winning squares. */
+function winner_display(series) {
+   for (var i = 0; i < series.length; i++)
+      $('#' + series[i]).attr("style", "background-color:green;");
+}
+
+/**
+ * Reset game board and square data.
+ */
 function reset() {
-   match_complete = 0;
-   update_info(match_id, new_match_msg);
-   for (i=0; i<ele_ids.length; i++) {
-      $(ele_ids[i]).attr("src",blank_img);
-      $(ele_ids[i]).attr("style","border:0px;");
-   }
+   if (p1turn)
+      $('#choice').text("It is " + $('#player-one-name').val() + "'s turn.");
+   else
+      $('#choice').text("It is " + $('#player-two-name').val() + "'s turn.");
+
+   $('#playAgainBTN').attr('hidden', true);
+
+   $('table#gameboard td img').attr("src", blank_img);
+   $('table#gameboard td img').attr("style", "background-color:none;");
+
+   concluded = 0;
+   available_squares = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+   p1_squares = [];
+   p2_squares = [];
 }
 
-/* Given any 'id', update the html to display the message 'msg' */
-function update_info (id, msg) {
-   document.getElementById(id).innerHTML = msg;
+/**
+ * Get a square to win or stop the player from winning or a 'tactical' square.
+ * 
+ * If the computer has any two of a winning combo the computer takes the remaining spot.
+ * If the player has any two of a winning combo the computer takes that spot preventing player win.
+ * 
+ * @returns 
+ */
+function get_computer_square() {
+   return get_last_available_square();
+}
+
+function get_first_available_square() {
+   if (available_squares.length > 0)
+      return available_squares.shift();
+   else
+      throw 'No squares are available! Failed to check availability before this point.';
+}
+
+function get_last_available_square() {
+   if (available_squares.length > 0)
+      return available_squares.pop();
+   else
+      throw 'No squares are available! Failed to check availability before this point.';
 }
