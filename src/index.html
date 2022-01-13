@@ -28,26 +28,17 @@
        * |  4  |  3  |  8  |
        * \-----|-----|-----/
        * 
-       * Positioning map:
-       * /-----|-----|-----\  T - top (1)
-       * |  TL |  TM |  TR |  M - middle (2)
-       * |-----|-----|-----|  B - bottom (3)
-       * |  ML |  MM |  MR |  L - left (1)
-       * |-----|-----|-----|  R - right (3)
-       * |  BL |  BM |  BR |
-       * \-----|-----|-----/
        */
       const magic = [[2, 7, 6], [9, 5, 1], [4, 3, 8]];
 
-      var blank_img = "../img/empty.png";
-      var p2_img = "../img/circle.png";
-      var p1_img = "../img/cross.png";
+      const playerOnePiece = "../img/cross.png";
+      const playerTwoPiece = "../img/circle.png";
 
       var setup = '<table id="gameboard">';
       for (let r = 0; r < magic[0].length; r++) {
          setup += '<tr>';
          for (let c = 0; c < magic[0].length; c++) {
-            setup += ('<td><img id="' + magic[r][c] + '" src="../img/empty.png" onclick="square_chosen(this)"></td>');
+            setup += ('<td onclick="chosen(this)"><img id="' + magic[r][c] + '" src=""></td>');
          }
          setup += '</tr>';
       }
